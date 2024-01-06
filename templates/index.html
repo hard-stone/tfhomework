@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>天府作业</title>
+<script language="javascript">
+  var t1 = new Date().getTime();
+</script>
+
 </head>
     <style>
         #loading {
@@ -17,23 +21,33 @@
     </style>
 
 <body>
-    <h1>Flask翻译页面</h1>
+    <h1>天府作业</h1>
     <form method="post" onsubmit="showLoading();">
 
         <p>请输入英文：</p>
         <input type="text" name="english" value="{{ english or '' }}">
         <button type="submit" name="button" value="Translate">翻译1</button>
         <p>翻译后的中文：</p>
+        <hr></hr>
         <p>{{ chinese or '' }}</p>
         <p>{{ message or '' }}</p>
-        <p>测试指定详情URL翻译：比如：https://medium.com/wise-well/the-four-stages-of-sleep-and-what-they-actually-do-d7c03ae2eb11</p>
+        <p>测试详情URL抓取和翻译：</p>
+        <ul>
+            <li>https://medium.com/wise-well/the-four-stages-of-sleep-and-what-they-actually-do-d7c03ae2eb11</li>
+            <li>https://medium.com/the-spike/2023-a-review-of-the-year-in-neuroscience-ece56b1dcc89</li>
+        </ul>
+        <p>请输入文章详情URL</p>
         <input type="text" name="test-url" value="{{ testUrl or '' }}">
-        <button type="submit" name="button" value="Translate2">文章翻译并保存PDF和下载，翻译需要很久..</button><br />
+        <button type="submit" name="button" value="Translate2">文章翻译并保存PDF和下载，翻译需要很久..</button><p>{{ transmessage or '' }}</p>
+        <p>耗时:{{ minutes or '' }}分{{ seconds or '' }}秒</p>
+        <br />
         <p>翻译后的中文：</p>
+                <hr></hr>
         <p>{{ articlechinese or '' }}</p>  </br>
-
+                <hr></hr>
         <p>上面是测试功能，下面是作业要求的功能:由于PDF输出中文乱码没有解决，先用TXT替代；PS：翻译要FQ</p>
 
+        </br>
         <button type="submit" name="button" value="Create pdf files">创建PDF文件（）,开始爬虫翻译</button><br />
 
         <button type="submit" name="button" value="Download">下载,下载打包目录所有PDF和TXT</button>
@@ -44,6 +58,9 @@
     <div id="loading">
         <img src="{{ url_for('static', filename='spin.gif') }}" alt="Loading..." />
     </div>
+
+
+
     <script>
         // 添加一个函数来显示加载提示
         function showLoading() {
