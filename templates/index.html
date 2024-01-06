@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天府作业</title>
+</head>
+    <style>
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #loading img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+
+<body>
+    <h1>Flask翻译页面</h1>
+    <form method="post" onsubmit="showLoading();">
+
+        <p>请输入英文：</p>
+        <input type="text" name="english" value="{{ english or '' }}">
+        <button type="submit" name="button" value="Translate">翻译1</button>
+        <p>翻译后的中文：</p>
+        <p>{{ chinese or '' }}</p>
+        <p>{{ message or '' }}</p>
+        <p>测试指定详情URL翻译：比如：https://medium.com/wise-well/the-four-stages-of-sleep-and-what-they-actually-do-d7c03ae2eb11</p>
+        <input type="text" name="test-url" value="{{ testUrl or '' }}">
+        <button type="submit" name="button" value="Translate2">文章翻译并保存PDF和下载，翻译需要很久..</button><br />
+        <p>翻译后的中文：</p>
+        <p>{{ articlechinese or '' }}</p>  </br>
+
+        <p>上面是测试功能，下面是作业要求的功能:由于PDF输出中文乱码没有解决，先用TXT替代</p>
+
+        <button type="submit" name="button" value="Create pdf files">创建PDF文件（）,开始爬虫翻译</button><br />
+
+        <button type="submit" name="button" value="Download">下载,下载打包目录所有PDF和TXT</button>
+
+
+    </form>
+    <!-- 添加一个加载提示 -->
+    <div id="loading">
+        <img src="{{ url_for('static', filename='spin.gif') }}" alt="Loading..." />
+    </div>
+    <script>
+        // 添加一个函数来显示加载提示
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
