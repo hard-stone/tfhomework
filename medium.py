@@ -88,9 +88,6 @@ class Demo(object):
 
             self.get_detail(data)   # 调用 get_detail 方法，获取文章的详细信息
 
-        # 生成excel
-        df = pd.DataFrame(self.data_list)
-        df.to_excel('article.xlsx', index=False)
 
     def get_detail(self, data):
         option = webdriver.ChromeOptions()

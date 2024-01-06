@@ -138,6 +138,9 @@ def index():
                 url = article[0]
                 print(url)
                 # 调用medium模块的get_detail_url函数，获取文章的内容
+
+                # 这里需要10个线程一起跑
+
                 d = medium.Demo()
                 like_count = d.get_detail_url(url)[1]
                 if like_count == -1:
@@ -211,6 +214,9 @@ def index():
             send_file(filename, as_attachment=True)
             # 渲染模板，传递参数
             return render_template('index.html', articlechinese=urltext, message='翻译保存下载成功')
+
+
+
 
 # 运行Flask应用
 if __name__ == '__main__':
