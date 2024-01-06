@@ -101,10 +101,10 @@ def get_top10_all():
     # 记录失败次数
     count = 0
     start = time.time()  # 记录开始时间 50
-    for i in range(50):
+    for i in range(10):
         # 计算每个线程的开始和结束位置 70 70
-        start = i * 70
-        end = start + 70
+        start = i * 20
+        end = start + 20
         t = threading.Thread(target=request_thread, args=(start, end, top10_articles, count))
         mythreads.append(t)
         t.start()
