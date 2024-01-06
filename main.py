@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 import zipfile
 
 from flask import Flask, request, render_template, send_file
@@ -127,6 +128,7 @@ def index():
             return render_template('index.html', english=english, chinese=chinese)
         # 如果点击的是创建PDF文件按钮
         elif button == 'Create pdf files':
+            #获取top10
             top10 = getTop10.get_top10_all()[0]
             losercount = getTop10.get_top10_all()[1]
 
@@ -146,32 +148,7 @@ def index():
                 thread = threading.Thread(target=process_url, args=(url, filenames))
                 # 启动线程
                 thread.start()
-                # d = medium.Demo()
-                # like_count = d.get_detail_url(url)[1]
-                # if like_count == -1:
-                #     continue
-                # innercontent = d.get_detail_url(url)[0]
-                # # innercontent = requstdetail(url)
-                # # 定义一个数组装载每次循环取得的数据
-                # text = []
-                # # 遍历innercontent数组，每个元素都调用翻译函数，并将翻译后的结果和翻译前的结果合并追加到一个text,并且每个元素后面都加上一个换行符
-                # for i in range(len(innercontent)):
-                #     try:
-                #         text.append(innercontent[i])
-                #         text.append(translate(innercontent[i]))
-                #     except Exception as e:
-                #         print(f"An error occurred while translating text: {e}")
 
-                # 调用创建PDF文件函数
-                # 文件名用时间戳
-                # 获取当前时间
-                # now = datetime.now()
-                # # 将当前时间转换为字符串，格式为年月日时分秒
-                # timestamp_str = now.strftime("%Y%m%d%H%M%S")
-                # # 使用时间戳作为文件名
-                # filename = "file_" + timestamp_str + ".pdf"
-                # filenames.append(filename)
-                # create_pdf(text, filename)
 
             # 渲染模板，传递参数
             return render_template('index.html', english=english, message='访问接口失败笔数:'+str(losercount))
@@ -204,7 +181,8 @@ def index():
         elif button == 'Translate2':
             # 判断参数是否为空
             if fanyi2 == '':
-                return render_template('index.html', message='请输入文章链接')
+                return render_template('index.html', transmessage='请输入文章链接')
+            start = time.time()  # 记录开始时间
             urltext = create_by_url(fanyi2)
             # 把urltext写入pdf，
             # 文件名用时间戳
@@ -217,8 +195,12 @@ def index():
             create_pdf(urltext, filename)
             # 发送文件
             send_file(filename, as_attachment=True)
+            endtime = time.time()  # 记录结束时间
+            minutes, seconds = divmod(endtime - start, 60)  # 记录结束时间
+            # 打印耗时时分秒格式
+            print("耗时: {}分{}秒".format(int(minutes), int(seconds)))
             # 渲染模板，传递参数
-            return render_template('index.html', articlechinese=urltext, message='翻译保存下载成功')
+            return render_template('index.html', minutes=minutes, seconds=int(seconds), articlechinese=urltext, transmessage='翻译保存下载成功')
 
 
 def process_url(url, filenames):
