@@ -138,35 +138,40 @@ def index():
                 url = article[0]
                 print(url)
                 # 调用medium模块的get_detail_url函数，获取文章的内容
-
                 # 这里需要10个线程一起跑
-
-                d = medium.Demo()
-                like_count = d.get_detail_url(url)[1]
-                if like_count == -1:
-                    continue
-                innercontent = d.get_detail_url(url)[0]
-                # innercontent = requstdetail(url)
-                # 定义一个数组装载每次循环取得的数据
-                text = []
-                # 遍历innercontent数组，每个元素都调用翻译函数，并将翻译后的结果和翻译前的结果合并追加到一个text,并且每个元素后面都加上一个换行符
-                for i in range(len(innercontent)):
-                    try:
-                        text.append(innercontent[i])
-                        text.append(translate(innercontent[i]))
-                    except Exception as e:
-                        print(f"An error occurred while translating text: {e}")
+                import threading
+                # 创建一个列表来存储文件名
+                filenames = []
+                # 创建一个新的线程
+                thread = threading.Thread(target=process_url, args=(url, filenames))
+                # 启动线程
+                thread.start()
+                # d = medium.Demo()
+                # like_count = d.get_detail_url(url)[1]
+                # if like_count == -1:
+                #     continue
+                # innercontent = d.get_detail_url(url)[0]
+                # # innercontent = requstdetail(url)
+                # # 定义一个数组装载每次循环取得的数据
+                # text = []
+                # # 遍历innercontent数组，每个元素都调用翻译函数，并将翻译后的结果和翻译前的结果合并追加到一个text,并且每个元素后面都加上一个换行符
+                # for i in range(len(innercontent)):
+                #     try:
+                #         text.append(innercontent[i])
+                #         text.append(translate(innercontent[i]))
+                #     except Exception as e:
+                #         print(f"An error occurred while translating text: {e}")
 
                 # 调用创建PDF文件函数
                 # 文件名用时间戳
                 # 获取当前时间
-                now = datetime.now()
-                # 将当前时间转换为字符串，格式为年月日时分秒
-                timestamp_str = now.strftime("%Y%m%d%H%M%S")
-                # 使用时间戳作为文件名
-                filename = "file_" + timestamp_str + ".pdf"
-                filenames.append(filename)
-                create_pdf(text, filename)
+                # now = datetime.now()
+                # # 将当前时间转换为字符串，格式为年月日时分秒
+                # timestamp_str = now.strftime("%Y%m%d%H%M%S")
+                # # 使用时间戳作为文件名
+                # filename = "file_" + timestamp_str + ".pdf"
+                # filenames.append(filename)
+                # create_pdf(text, filename)
 
             # 渲染模板，传递参数
             return render_template('index.html', english=english, message='访问接口失败笔数:'+str(losercount))
@@ -216,6 +221,24 @@ def index():
             return render_template('index.html', articlechinese=urltext, message='翻译保存下载成功')
 
 
+def process_url(url, filenames):
+    d = medium.Demo()
+    like_count = d.get_detail_url(url)[1]
+    if like_count == -1:
+        return
+    innercontent = d.get_detail_url(url)[0]
+    text = []
+    for i in range(len(innercontent)):
+        try:
+            text.append(innercontent[i])
+            text.append(translate(innercontent[i]))
+        except Exception as e:
+            print(f"An error occurred while translating text: {e}")
+    now = datetime.now()
+    timestamp_str = now.strftime("%Y%m%d%H%M%S")
+    filename = "file_" + timestamp_str + ".pdf"
+    filenames.append(filename)
+    create_pdf(text, filename)
 
 
 # 运行Flask应用
